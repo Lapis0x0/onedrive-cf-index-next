@@ -17,7 +17,7 @@ module.exports = {
   title: "Lapis0x0的仓库",
 
   // The folder that you are to share publicly with onedrive-cf-index-ng. Use '/' if you want to share your root folder.
-  baseDirectory: process.env.BASE_DIRECTORY || '/',
+  baseDirectory: process.env.BASE_DIRECTORY || '/Public',
 
   // [OPTIONAL] This represents the maximum number of items that one directory lists, pagination supported.
   // Do note that this is limited up to 200 items by the upstream OneDrive API.
@@ -42,7 +42,7 @@ module.exports = {
   protectedRoutes: ['/Private', '/Demo/😎Another Private Folder Password 123'],
 
   // [OPTIONAL] Use "" here if you want to remove this email address from the nav bar.
-  email: 'mailto:me@lyc8503.net',
+  email: 'mailto:szy2089931398@gmail.com',
 
   // [OPTIONAL] This is an array of names and links for setting your social information and links.
   // In the latest update, all brand icons inside font awesome is supported and the icon to render is based on the name
@@ -50,7 +50,7 @@ module.exports = {
   links: [
     {
       name: 'GitHub',
-      link: 'https://github.com/lyc8503',
+      link: 'https://github.com/lapis0x0',
     },
   ],
 
