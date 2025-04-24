@@ -1,5 +1,5 @@
 import { Button } from "./ui/button"
-import { Download, FileText } from "lucide-react"
+import { Download, FileText, Check } from "lucide-react"
 import Link from "next/link"
 import { OdFileObject } from "../types"
 import { getFileIcon } from "../utils/getFileIcon"
@@ -10,9 +10,11 @@ interface FileItemProps {
   path: string
   viewMode: "grid" | "list"
   onDownload: () => void
+  isSelected?: boolean
+  onSelect?: () => void
 }
 
-export function FileItem({ file, path, viewMode, onDownload }: FileItemProps) {
+export function FileItem({ file, path, viewMode, onDownload, isSelected = false, onSelect }: FileItemProps) {
   const getFileIconComponent = (type: string) => {
     // 使用原有的文件图标逻辑
     const icon = getFileIcon(file.name, { video: Boolean(file.video) })
@@ -24,16 +26,34 @@ export function FileItem({ file, path, viewMode, onDownload }: FileItemProps) {
 
   if (viewMode === "list") {
     return (
-      <div className="flex items-center justify-between rounded-md border border-zinc-800 bg-zinc-900 p-3 hover:border-zinc-700">
-        <Link href={fileHref} className="flex items-center gap-3 hover:text-red-500">
-          {getFileIconComponent(file.name)}
-          <div>
-            <div className="font-medium text-white">{file.name}</div>
-            <div className="text-sm text-zinc-400">
-              {humanFileSize(file.size)} • {new Date(file.lastModifiedDateTime).toLocaleDateString()}
+      <div 
+        className={`flex items-center justify-between rounded-md border ${
+          isSelected 
+            ? "border-red-500 bg-zinc-800" 
+            : "border-zinc-800 bg-zinc-900 hover:border-zinc-700"
+        } p-3`}
+      >
+        <div className="flex items-center gap-3">
+          <button 
+            className={`flex h-5 w-5 items-center justify-center rounded-sm ${
+              isSelected 
+                ? "bg-red-500 text-white" 
+                : "border border-zinc-700 bg-zinc-800 text-transparent hover:border-zinc-600"
+            }`}
+            onClick={onSelect}
+          >
+            <Check className="h-3 w-3" />
+          </button>
+          <Link href={fileHref} className="flex items-center gap-3 hover:text-red-500">
+            {getFileIconComponent(file.name)}
+            <div>
+              <div className="font-medium text-white">{file.name}</div>
+              <div className="text-sm text-zinc-400">
+                {humanFileSize(file.size)} • {new Date(file.lastModifiedDateTime).toLocaleDateString()}
+              </div>
             </div>
-          </div>
-        </Link>
+          </Link>
+        </div>
         <div className="flex items-center">
           <Button 
             variant="ghost" 
@@ -50,7 +70,23 @@ export function FileItem({ file, path, viewMode, onDownload }: FileItemProps) {
   }
 
   return (
-    <div className="flex flex-col rounded-md border border-zinc-800 bg-zinc-900 p-4 hover:border-zinc-700">
+    <div 
+      className={`relative flex flex-col rounded-md border ${
+        isSelected 
+          ? "border-red-500 bg-zinc-800" 
+          : "border-zinc-800 bg-zinc-900 hover:border-zinc-700"
+      } p-4`}
+    >
+      <button 
+        className={`absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-sm ${
+          isSelected 
+            ? "bg-red-500 text-white" 
+            : "border border-zinc-700 bg-zinc-800 text-transparent hover:border-zinc-600"
+        }`}
+        onClick={onSelect}
+      >
+        <Check className="h-3 w-3" />
+      </button>
       <Link href={fileHref} className="flex items-center gap-2 hover:text-red-500">
         {getFileIconComponent(file.name)}
         <div className="font-medium text-white truncate">{file.name}</div>

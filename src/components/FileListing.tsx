@@ -199,13 +199,13 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
       return
     }
 
-    const files = getFiles()
+    // 全选所有文件和文件夹
     const newSelected: { [key: string]: boolean } = {}
-    files.forEach(f => {
-      newSelected[f.id] = true
+    folderChildren.forEach(item => {
+      newSelected[item.id] = true
     })
     setSelected(newSelected)
-    setTotalSelected(files.length)
+    setTotalSelected(folderChildren.length)
   }
 
   // Selected file download
