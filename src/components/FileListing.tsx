@@ -356,35 +356,10 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           handleFolderDownload={handleFolderDownload}
         />
 
-        {!onlyOnePage && (
-          <div className="rounded-b bg-white dark:bg-gray-900 dark:text-gray-100">
-            <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
-              {`- 显示 ${size} 页 ` +
-                (isLoadingMore ? `共 ... 个文件 -` : `共 ${folderChildren.length} 个文件 -`)}
-            </div>
-            <button
-              className={`flex w-full items-center justify-center space-x-2 p-3 disabled:cursor-not-allowed ${
-                isLoadingMore || isReachingEnd ? 'opacity-60' : 'hover:bg-gray-100 dark:hover:bg-gray-850'
-              }`}
-              onClick={() => setSize(size + 1)}
-              disabled={isLoadingMore || isReachingEnd}
-            >
-              {isLoadingMore ? (
-                <>
-                  <LoadingIcon className="inline-block h-4 w-4 animate-spin" />
-                  <span>{'加载中 ...'}</span>{' '}
-                </>
-              ) : isReachingEnd ? (
-                <span>{'没有更多文件'}</span>
-              ) : (
-                <>
-                  <span>{'加载更多'}</span>
-                  <span className="icon">chevron-circle-down</span>
-                </>
-              )}
-            </button>
-          </div>
-        )}
+        <div className="border-b border-gray-200 p-3 text-center font-mono text-sm text-gray-400 dark:border-gray-700">
+          {`- 显示 ${size} 页 ` +
+            (isLoadingMore ? `共 ... 个文件 -` : `共 ${folderChildren.length} 个文件 -`)}
+        </div>
 
         {readmeFile && (
           <div className="mt-4">

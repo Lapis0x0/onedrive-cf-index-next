@@ -4,6 +4,7 @@ import { Download, FileText, MoreHorizontal, Share } from "lucide-react"
 import Link from "next/link"
 import { OdFileObject } from "../types"
 import { getFileIcon } from "../utils/getFileIcon"
+import { humanFileSize } from "../utils/fileDetails"
 
 interface FileItemProps {
   file: OdFileObject
@@ -31,7 +32,7 @@ export function FileItem({ file, path, viewMode, onDownload, onShare }: FileItem
           <div>
             <div className="font-medium text-white">{file.name}</div>
             <div className="text-sm text-zinc-400">
-              {file.size} • {new Date(file.lastModifiedDateTime).toLocaleDateString()}
+              {humanFileSize(file.size)} • {new Date(file.lastModifiedDateTime).toLocaleDateString()}
             </div>
           </div>
         </Link>
@@ -74,7 +75,7 @@ export function FileItem({ file, path, viewMode, onDownload, onShare }: FileItem
         <div className="font-medium text-white truncate">{file.name}</div>
       </Link>
       <div className="mt-2 text-sm text-zinc-400">
-        {file.size} • {new Date(file.lastModifiedDateTime).toLocaleDateString()}
+        {humanFileSize(file.size)} • {new Date(file.lastModifiedDateTime).toLocaleDateString()}
       </div>
     </div>
   )
