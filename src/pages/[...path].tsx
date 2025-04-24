@@ -10,12 +10,12 @@ export default function Folders() {
   const { query } = useRouter()
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-white dark:bg-gray-900">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-900">
       <Head>
         <title>{siteConfig.title}</title>
       </Head>
 
-      <main className="flex w-full flex-1 flex-col bg-gray-50 dark:bg-gray-800">
+      <main className="flex w-full flex-1 flex-col bg-zinc-900">
         <Navbar />
         <div className="mx-auto w-full max-w-5xl py-4 sm:p-4">
           <FileListing query={query} />
