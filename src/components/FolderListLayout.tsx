@@ -85,7 +85,7 @@ const FolderListLayout = ({
               <FontAwesomeIcon icon={['far', 'copy']} size="lg" />
             </button>
             {totalGenerating ? (
-              <Downloading title={'Downloading selected files, refresh page to cancel'} style="p-1.5" />
+              <Downloading title={'Downloading selected files, refresh page to cancel'} style={{ padding: '0.375rem' }} />
             ) : (
               <button
                 title={'Download selected files'}
@@ -126,7 +126,7 @@ const FolderListLayout = ({
                 <FontAwesomeIcon icon={['far', 'copy']} />
               </span>
               {folderGenerating[c.id] ? (
-                <Downloading title={'Downloading folder, refresh page to cancel'} style="px-1.5 py-1" />
+                <Downloading title={'Downloading folder, refresh page to cancel'} style={{ paddingLeft: '0.375rem', paddingRight: '0.375rem', paddingTop: '0.25rem', paddingBottom: '0.25rem' }} />
               ) : (
                 <span
                   title={'Download folder'}
