@@ -1,13 +1,21 @@
 import type { ParsedUrlQuery } from 'querystring'
-
 import Link from 'next/link'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ChevronRight, Home } from 'lucide-react'
+
+import { cn } from '../lib/utils'
+import {
+  Breadcrumb as BreadcrumbRoot,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from './ui/breadcrumb'
 
 const HomeCrumb = () => {
   return (
-    <Link href="/" className="flex items-center">
-      <FontAwesomeIcon className="h-3 w-3" icon={['far', 'flag']} />
-      <span className="ml-2 font-medium">{'Home'}</span>
+    <Link href="/" className="flex items-center text-foreground hover:text-red-500">
+      <Home className="h-4 w-4" />
+      <span className="ml-2 font-medium">{'首页'}</span>
     </Link>
   )
 }
@@ -16,42 +24,46 @@ const Breadcrumb: React.FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   if (query) {
     const { path } = query
     if (Array.isArray(path)) {
-      // We are rendering the path in reverse, so that the browser automatically scrolls to the end of the breadcrumb
-      // https://stackoverflow.com/questions/18614301/keep-overflow-div-scrolled-to-bottom-unless-user-scrolls-up/18614561
       return (
-        <ol className="no-scrollbar inline-flex flex-row-reverse items-center gap-1 overflow-x-scroll text-sm text-gray-600 dark:text-gray-300 md:gap-3">
-          {path
-            .slice(0)
-            .reverse()
-            .map((p: string, i: number) => (
-              <li key={i} className="flex flex-shrink-0 items-center">
-                <FontAwesomeIcon className="h-3 w-3" icon="angle-right" />
-                <Link
-                  href={`/${path
-                    .slice(0, path.length - i)
-                    .map(p => encodeURIComponent(p))
-                    .join('/')}`}
-                  passHref
-                  className={`ml-1 transition-all duration-75 hover:opacity-70 md:ml-3 ${
-                    i == 0 && 'pointer-events-none opacity-80'
-                  }`}
-                >
-                  {p}
-                </Link>
-              </li>
+        <BreadcrumbRoot>
+          <BreadcrumbList className="flex-wrap">
+            <BreadcrumbItem>
+              <HomeCrumb />
+            </BreadcrumbItem>
+            {path.map((p: string, i: number) => (
+              <BreadcrumbItem key={i}>
+                <BreadcrumbSeparator>
+                  <ChevronRight className="h-4 w-4" />
+                </BreadcrumbSeparator>
+                {i === path.length - 1 ? (
+                  <BreadcrumbPage>{p}</BreadcrumbPage>
+                ) : (
+                  <Link
+                    href={`/${path
+                      .slice(0, i + 1)
+                      .map(p => encodeURIComponent(p))
+                      .join('/')}`}
+                    className="transition-colors hover:text-red-500"
+                  >
+                    {p}
+                  </Link>
+                )}
+              </BreadcrumbItem>
             ))}
-          <li className="flex-shrink-0 transition-all duration-75 hover:opacity-80">
-            <HomeCrumb />
-          </li>
-        </ol>
+          </BreadcrumbList>
+        </BreadcrumbRoot>
       )
     }
   }
 
   return (
-    <div className="text-sm text-gray-600 transition-all duration-75 hover:opacity-80 dark:text-gray-300">
-      <HomeCrumb />
-    </div>
+    <BreadcrumbRoot>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <HomeCrumb />
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </BreadcrumbRoot>
   )
 }
 
