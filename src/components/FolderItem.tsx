@@ -1,5 +1,5 @@
 import { Button } from "./ui/button"
-import { Download, FolderClosed, Check } from "lucide-react"
+import { Download, FolderClosed } from "lucide-react"
 import Link from "next/link"
 import { OdFolderChildren } from "../types"
 
@@ -18,6 +18,19 @@ export function FolderItem({ folder, path, viewMode, onDownload, isSelected = fa
   
   // 计算文件夹中的项目数量
   const itemCount = folder.folder?.childCount || 0
+  
+  // 处理点击事件
+  const handleContainerClick = (e: React.MouseEvent) => {
+    // 如果点击的是链接或按钮，不触发选择
+    if ((e.target as HTMLElement).closest('a') || (e.target as HTMLElement).closest('button')) {
+      return
+    }
+    
+    // 否则触发选择
+    if (onSelect) {
+      onSelect()
+    }
+  }
 
   if (viewMode === "list") {
     return (
@@ -26,27 +39,16 @@ export function FolderItem({ folder, path, viewMode, onDownload, isSelected = fa
           isSelected 
             ? "border-red-500 bg-zinc-800" 
             : "border-zinc-800 bg-zinc-900 hover:border-zinc-700"
-        } p-3`}
+        } p-3 cursor-pointer`}
+        onClick={handleContainerClick}
       >
-        <div className="flex items-center gap-3">
-          <button 
-            className={`flex h-5 w-5 items-center justify-center rounded-sm ${
-              isSelected 
-                ? "bg-red-500 text-white" 
-                : "border border-zinc-700 bg-zinc-800 text-transparent hover:border-zinc-600"
-            }`}
-            onClick={onSelect}
-          >
-            <Check className="h-3 w-3" />
-          </button>
-          <Link href={folderHref} className="flex items-center gap-3 hover:text-red-500">
-            <FolderClosed className="h-5 w-5 text-red-500" />
-            <div>
-              <div className="font-medium text-white">{folder.name}</div>
-              <div className="text-sm text-zinc-400">{itemCount} 个项目</div>
-            </div>
-          </Link>
-        </div>
+        <Link href={folderHref} className="flex items-center gap-3 hover:text-red-500">
+          <FolderClosed className="h-5 w-5 text-red-500" />
+          <div>
+            <div className="font-medium text-white">{folder.name}</div>
+            <div className="text-sm text-zinc-400">{itemCount} 个项目</div>
+          </div>
+        </Link>
         <div className="flex items-center">
           <Button 
             variant="ghost" 
@@ -68,19 +70,10 @@ export function FolderItem({ folder, path, viewMode, onDownload, isSelected = fa
         isSelected 
           ? "border-red-500 bg-zinc-800" 
           : "border-zinc-800 bg-zinc-900 hover:border-zinc-700"
-      } p-4`}
+      } p-4 cursor-pointer`}
+      onClick={handleContainerClick}
     >
-      <button 
-        className={`absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-sm ${
-          isSelected 
-            ? "bg-red-500 text-white" 
-            : "border border-zinc-700 bg-zinc-800 text-transparent hover:border-zinc-600"
-        }`}
-        onClick={onSelect}
-      >
-        <Check className="h-3 w-3" />
-      </button>
-      <Link href={folderHref} className="flex items-center gap-2 hover:text-red-500">
+      <Link href={folderHref} className="flex items-center gap-2 hover:text-red-500 z-10">
         <FolderClosed className="h-5 w-5 text-red-500" />
         <div className="font-medium text-white">{folder.name}</div>
       </Link>
