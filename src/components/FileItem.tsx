@@ -1,6 +1,5 @@
 import { Button } from "./ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Download, FileText, MoreHorizontal, Share } from "lucide-react"
+import { Download, FileText } from "lucide-react"
 import Link from "next/link"
 import { OdFileObject } from "../types"
 import { getFileIcon } from "../utils/getFileIcon"
@@ -11,10 +10,9 @@ interface FileItemProps {
   path: string
   viewMode: "grid" | "list"
   onDownload: () => void
-  onShare: () => void
 }
 
-export function FileItem({ file, path, viewMode, onDownload, onShare }: FileItemProps) {
+export function FileItem({ file, path, viewMode, onDownload }: FileItemProps) {
   const getFileIconComponent = (type: string) => {
     // 使用原有的文件图标逻辑
     const icon = getFileIcon(file.name, { video: Boolean(file.video) })
@@ -46,23 +44,6 @@ export function FileItem({ file, path, viewMode, onDownload, onShare }: FileItem
             <Download className="h-4 w-4" />
             <span className="sr-only">下载</span>
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white">
-                <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">更多选项</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-zinc-900 text-zinc-200">
-              <DropdownMenuItem 
-                className="hover:bg-zinc-800 hover:text-white"
-                onClick={onShare}
-              >
-                <Share className="mr-2 h-4 w-4" />
-                分享
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     )

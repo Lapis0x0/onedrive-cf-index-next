@@ -20,7 +20,6 @@ interface FileExplorerProps {
   totalGenerating: boolean
   handleSelectedDownload: () => void
   folderGenerating: { [key: string]: boolean }
-  handleSelectedPermalink: (baseUrl: string) => void
   handleFolderDownload: (id: string, name?: string) => void
 }
 
@@ -35,7 +34,6 @@ export function FileExplorer({
   totalGenerating,
   handleSelectedDownload,
   folderGenerating,
-  handleSelectedPermalink,
   handleFolderDownload
 }: FileExplorerProps) {
   const router = useRouter()
@@ -55,10 +53,13 @@ export function FileExplorer({
         case "date":
           return new Date(b.lastModifiedDateTime).getTime() - new Date(a.lastModifiedDateTime).getTime()
         case "size":
-          if (type === "folder") return 0
-          return (b.file?.size || 0) - (a.file?.size || 0)
+          if (type === "folder") {
+            return (b.folder?.childCount || 0) - (a.folder?.childCount || 0)
+          } else {
+            return b.size - a.size
+          }
         case "type":
-          if (type === "folder") return 0
+          if (type === "folder") return -1
           const extA = a.name.split('.').pop() || ""
           const extB = b.name.split('.').pop() || ""
           return extA.localeCompare(extB)
@@ -73,30 +74,37 @@ export function FileExplorer({
 
   return (
     <div className="space-y-6">
+      <Breadcrumb query={query} />
+      
       <div className="flex items-center justify-between">
-        <Breadcrumb query={query} />
+        <h2 className="text-xl font-bold text-white">文件</h2>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className={`border-zinc-800 bg-zinc-900 ${viewMode === "grid" ? "text-red-500" : "text-zinc-400"}`}
-            onClick={() => setViewMode("grid")}
-          >
-            <Grid className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className={`border-zinc-800 bg-zinc-900 ${viewMode === "list" ? "text-red-500" : "text-zinc-400"}`}
-            onClick={() => setViewMode("list")}
-          >
-            <List className="h-4 w-4" />
-          </Button>
+          <div className="flex rounded-md border border-zinc-800 bg-zinc-900">
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`rounded-none border-r border-zinc-800 ${viewMode === "list" ? "bg-zinc-800 text-white" : "text-zinc-400"}`}
+              onClick={() => setViewMode("list")}
+            >
+              <List className="h-4 w-4" />
+              <span className="sr-only">列表视图</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={viewMode === "grid" ? "bg-zinc-800 text-white" : "text-zinc-400"}
+              onClick={() => setViewMode("grid")}
+            >
+              <Grid className="h-4 w-4" />
+              <span className="sr-only">网格视图</span>
+            </Button>
+          </div>
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm" className="border-zinc-800 bg-zinc-900 text-zinc-400">
-                <SlidersHorizontal className="mr-2 h-4 w-4" />
-                排序
+              <Button variant="outline" size="icon" className="border-zinc-800 bg-zinc-900 text-zinc-400 hover:bg-zinc-800 hover:text-white">
+                <SlidersHorizontal className="h-4 w-4" />
+                <span className="sr-only">排序</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-zinc-900 text-zinc-200">
@@ -139,7 +147,6 @@ export function FileExplorer({
                 path={path}
                 viewMode={viewMode}
                 onDownload={() => handleFolderDownload(folder.id, folder.name)}
-                onShare={() => handleSelectedPermalink(window.location.origin)}
               />
             ))}
           </div>
@@ -154,35 +161,17 @@ export function FileExplorer({
                 path={path}
                 viewMode={viewMode}
                 onDownload={() => toggleItemSelected(file.id)}
-                onShare={() => handleSelectedPermalink(window.location.origin)}
               />
             ))}
           </div>
         )}
-      </div>
 
-      {totalSelected > 0 && (
-        <div className="fixed bottom-4 right-4 z-10 flex items-center gap-2 rounded-lg bg-zinc-900 p-4 shadow-lg">
-          <span className="text-white">{`已选择 ${totalSelected} 个文件`}</span>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={handleSelectedDownload}
-            disabled={totalGenerating}
-            className="border-zinc-600 bg-zinc-700 text-white hover:bg-zinc-600"
-          >
-            下载所选
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => toggleTotalSelected()}
-            className="border-zinc-600 bg-zinc-700 text-white hover:bg-zinc-600"
-          >
-            取消选择
-          </Button>
-        </div>
-      )}
+        {sortedFolders.length === 0 && sortedFiles.length === 0 && (
+          <div className="rounded-md border border-zinc-800 bg-zinc-900 p-8 text-center">
+            <p className="text-zinc-400">该文件夹为空</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

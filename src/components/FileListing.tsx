@@ -209,52 +209,33 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
   }
 
   // Selected file download
-  const handleSelectedDownload = () => {
+  const handleSelectedDownload = async () => {
     const files = getFiles().filter(f => selected[f.id])
-    const folderName = path.substring(path.lastIndexOf('/') + 1)
+    if (files.length === 0) {
+      toast.error('请至少选择一个文件')
+      return
+    }
 
     setTotalGenerating(true)
     const toastId = toast.loading(<DownloadingToast router={router} />)
+    const folderName = path.substring(path.lastIndexOf('/') + 1)
 
-    downloadMultipleFiles({
-      toastId,
-      router,
-      files: files.map(f => ({
-        name: f.name,
-        url: `/api/raw?path=${path}/${encodeURIComponent(f.name)}`,
-      })),
-      folder: folderName ? decodeURIComponent(folderName) : undefined,
-    })
-      .then(() => {
-        setTotalGenerating(false)
-        toast.success('文件下载成功。', { id: toastId })
+    try {
+      await downloadMultipleFiles({
+        toastId,
+        router,
+        files: files.map(f => ({
+          name: f.name,
+          url: `/api/raw?path=${path}/${encodeURIComponent(f.name)}`,
+        })),
+        folder: folderName ? decodeURIComponent(folderName) : undefined,
       })
-      .catch(() => {
-        setTotalGenerating(false)
-        toast.error('文件下载失败。', { id: toastId })
-      })
-  }
-
-  // Get selected file permalink
-  const handleSelectedPermalink = (baseUrl: string) => {
-    const files = getFiles().filter(f => selected[f.id])
-    if (files.length === 0) {
-      toast.error('没有选择文件。')
-      return
+      setTotalGenerating(false)
+      toast.success('文件下载成功', { id: toastId })
+    } catch (error) {
+      setTotalGenerating(false)
+      toast.error('文件下载失败', { id: toastId })
     }
-
-    // If only one file is selected, copy the permalink of that file
-    if (files.length === 1) {
-      const permalink = `${baseUrl}${path === '/' ? '' : path}/${encodeURIComponent(files[0].name)}`
-      navigator.clipboard.writeText(permalink)
-      toast.success('文件链接已复制到剪贴板。')
-      return
-    }
-
-    // If multiple files are selected, copy the permalink of these files
-    const permalink = `${baseUrl}${path}?${files.map(f => `selected=${encodeURIComponent(f.name)}`).join('&')}`
-    navigator.clipboard.writeText(permalink)
-    toast.success('所选文件的链接已复制到剪贴板。')
   }
 
   // Folder recursive download
@@ -352,7 +333,6 @@ const FileListing: FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
           totalGenerating={totalGenerating}
           handleSelectedDownload={handleSelectedDownload}
           folderGenerating={folderGenerating}
-          handleSelectedPermalink={handleSelectedPermalink}
           handleFolderDownload={handleFolderDownload}
         />
 

@@ -1,6 +1,5 @@
 import { Button } from "./ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
-import { Download, FolderClosed, MoreHorizontal, Share } from "lucide-react"
+import { Download, FolderClosed } from "lucide-react"
 import Link from "next/link"
 import { OdFolderChildren } from "../types"
 
@@ -9,10 +8,9 @@ interface FolderItemProps {
   path: string
   viewMode: "grid" | "list"
   onDownload: () => void
-  onShare: () => void
 }
 
-export function FolderItem({ folder, path, viewMode, onDownload, onShare }: FolderItemProps) {
+export function FolderItem({ folder, path, viewMode, onDownload }: FolderItemProps) {
   // 构建文件夹链接
   const folderHref = `${path === '/' ? '' : path}/${encodeURIComponent(folder.name)}`
   
@@ -39,23 +37,6 @@ export function FolderItem({ folder, path, viewMode, onDownload, onShare }: Fold
             <Download className="h-4 w-4" />
             <span className="sr-only">下载</span>
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white">
-                <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">更多选项</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-zinc-900 text-zinc-200">
-              <DropdownMenuItem 
-                className="hover:bg-zinc-800 hover:text-white"
-                onClick={onShare}
-              >
-                <Share className="mr-2 h-4 w-4" />
-                分享
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     )
