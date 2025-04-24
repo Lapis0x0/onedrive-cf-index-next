@@ -11,57 +11,60 @@ import {
   BreadcrumbSeparator,
 } from './ui/breadcrumb'
 
-const HomeCrumb = () => {
-  return (
-    <Link href="/" className="flex items-center text-foreground hover:text-red-500">
-      <Home className="h-4 w-4" />
-      <span className="ml-2 font-medium">{'首页'}</span>
-    </Link>
-  )
+interface BreadcrumbProps {
+  query: ParsedUrlQuery
 }
 
-const Breadcrumb: React.FC<{ query?: ParsedUrlQuery }> = ({ query }) => {
-  if (query) {
-    const { path } = query
-    if (Array.isArray(path)) {
-      return (
-        <BreadcrumbRoot>
-          <BreadcrumbList className="flex-wrap">
-            <BreadcrumbItem>
-              <HomeCrumb />
-            </BreadcrumbItem>
-            {path.map((p: string, i: number) => (
-              <BreadcrumbItem key={i}>
-                <BreadcrumbSeparator>
-                  <ChevronRight className="h-4 w-4" />
-                </BreadcrumbSeparator>
-                {i === path.length - 1 ? (
-                  <BreadcrumbPage>{p}</BreadcrumbPage>
-                ) : (
-                  <Link
-                    href={`/${path
-                      .slice(0, i + 1)
-                      .map(p => encodeURIComponent(p))
-                      .join('/')}`}
-                    className="transition-colors hover:text-red-500"
-                  >
-                    {p}
-                  </Link>
-                )}
-              </BreadcrumbItem>
-            ))}
-          </BreadcrumbList>
-        </BreadcrumbRoot>
-      )
+function Breadcrumb({ query }: BreadcrumbProps) {
+  // 从查询参数中获取路径
+  const path = Array.isArray(query.path) ? query.path.join('/') : query.path || ''
+  
+  // 将路径分割成各个部分
+  const pathSegments = path.split('/').filter(Boolean)
+  
+  // 构建面包屑导航项
+  const breadcrumbItems = pathSegments.map((segment, index) => {
+    // 构建当前段的完整路径
+    const href = '/' + pathSegments.slice(0, index + 1).join('/')
+    
+    return {
+      name: decodeURIComponent(segment),
+      href
     }
-  }
+  })
 
   return (
-    <BreadcrumbRoot>
-      <BreadcrumbList>
+    <BreadcrumbRoot className="mb-4">
+      <BreadcrumbList className="flex-wrap">
         <BreadcrumbItem>
-          <HomeCrumb />
+          <Link href="/" className="flex items-center gap-1 text-zinc-400 hover:text-red-500">
+            <Home className="h-4 w-4" />
+            <span>首页</span>
+          </Link>
         </BreadcrumbItem>
+        <BreadcrumbSeparator>
+          <ChevronRight className="h-4 w-4 text-zinc-500" />
+        </BreadcrumbSeparator>
+        
+        {breadcrumbItems.map((item, index) => (
+          <BreadcrumbItem key={item.href}>
+            {index === breadcrumbItems.length - 1 ? (
+              <BreadcrumbPage className="text-white">{item.name}</BreadcrumbPage>
+            ) : (
+              <>
+                <Link 
+                  href={item.href}
+                  className="text-zinc-400 hover:text-red-500"
+                >
+                  {item.name}
+                </Link>
+                <BreadcrumbSeparator>
+                  <ChevronRight className="h-4 w-4 text-zinc-500" />
+                </BreadcrumbSeparator>
+              </>
+            )}
+          </BreadcrumbItem>
+        ))}
       </BreadcrumbList>
     </BreadcrumbRoot>
   )

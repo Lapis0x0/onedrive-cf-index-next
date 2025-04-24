@@ -169,7 +169,7 @@ export function FileExplorer({
             size="sm"
             onClick={handleSelectedDownload}
             disabled={totalGenerating}
-            className="border-zinc-700 bg-zinc-800 text-white hover:bg-zinc-700"
+            className="border-zinc-600 bg-zinc-700 text-white hover:bg-zinc-600"
           >
             下载所选
           </Button>
@@ -177,7 +177,7 @@ export function FileExplorer({
             variant="outline" 
             size="sm"
             onClick={() => toggleTotalSelected()}
-            className="border-zinc-700 bg-zinc-800 text-white hover:bg-zinc-700"
+            className="border-zinc-600 bg-zinc-700 text-white hover:bg-zinc-600"
           >
             取消选择
           </Button>

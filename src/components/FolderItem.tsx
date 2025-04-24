@@ -8,8 +8,8 @@ interface FolderItemProps {
   folder: OdFolderChildren
   path: string
   viewMode: "grid" | "list"
-  onDownload?: () => void
-  onShare?: () => void
+  onDownload: () => void
+  onShare: () => void
 }
 
 export function FolderItem({ folder, path, viewMode, onDownload, onShare }: FolderItemProps) {
@@ -26,33 +26,37 @@ export function FolderItem({ folder, path, viewMode, onDownload, onShare }: Fold
           <FolderClosed className="h-5 w-5 text-red-500" />
           <div>
             <div className="font-medium text-white">{folder.name}</div>
-            <p className="text-sm text-zinc-400">{itemCount} 个项目</p>
+            <div className="text-sm text-zinc-400">{itemCount} 个项目</div>
           </div>
         </Link>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white">
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">更多选项</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="bg-zinc-900 text-zinc-200">
-            <DropdownMenuItem 
-              className="hover:bg-zinc-800 hover:text-white"
-              onClick={onShare}
-            >
-              <Share className="mr-2 h-4 w-4" />
-              分享
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              className="hover:bg-zinc-800 hover:text-white"
-              onClick={onDownload}
-            >
-              <Download className="mr-2 h-4 w-4" />
-              下载
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-zinc-400 hover:text-white"
+            onClick={onDownload}
+          >
+            <Download className="h-4 w-4" />
+            <span className="sr-only">下载</span>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-white">
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">更多选项</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-zinc-900 text-zinc-200">
+              <DropdownMenuItem 
+                className="hover:bg-zinc-800 hover:text-white"
+                onClick={onShare}
+              >
+                <Share className="mr-2 h-4 w-4" />
+                分享
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     )
   }

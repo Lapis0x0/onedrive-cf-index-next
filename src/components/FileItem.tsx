@@ -9,8 +9,8 @@ interface FileItemProps {
   file: OdFileObject
   path: string
   viewMode: "grid" | "list"
-  onDownload?: () => void
-  onShare?: () => void
+  onDownload: () => void
+  onShare: () => void
 }
 
 export function FileItem({ file, path, viewMode, onDownload, onShare }: FileItemProps) {
