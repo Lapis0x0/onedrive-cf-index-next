@@ -178,26 +178,28 @@ export function FileExplorer({
       </div>
       
       {totalSelected > 0 && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-10 flex items-center gap-2 rounded-lg bg-zinc-900 p-4 shadow-lg border border-zinc-800">
-          <span className="text-white">{`已选择 ${totalSelected} 个项目`}</span>
-          <Button 
-            variant="default" 
-            size="sm"
-            onClick={handleSelectedDownload}
-            disabled={totalGenerating}
-            className="bg-red-600 hover:bg-red-700 text-white"
-          >
-            <Download className="mr-2 h-4 w-4" />
-            下载所选
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={toggleTotalSelected}
-            className="border-zinc-700 bg-zinc-800 text-white hover:bg-zinc-700"
-          >
-            取消选择
-          </Button>
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-wrap items-center justify-center gap-2 rounded-lg bg-zinc-900 p-4 shadow-lg border border-zinc-800 min-w-[280px] max-w-[90%]">
+          <span className="text-white whitespace-nowrap">{`已选择 ${totalSelected} 个项目`}</span>
+          <div className="flex items-center gap-2 mt-0 sm:mt-0">
+            <Button 
+              variant="default" 
+              size="sm"
+              onClick={handleSelectedDownload}
+              disabled={totalGenerating}
+              className="bg-red-600 hover:bg-red-700 text-white whitespace-nowrap"
+            >
+              <Download className="mr-2 h-4 w-4" />
+              下载所选
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={toggleTotalSelected}
+              className="border-zinc-700 bg-zinc-800 text-white hover:bg-zinc-700 whitespace-nowrap"
+            >
+              取消选择
+            </Button>
+          </div>
         </div>
       )}
     </div>
